@@ -1,0 +1,26 @@
+---
+import type { EligibleQuest } from "@/utils/cloudskillsboost/defs";
+
+interface Props {
+  datum: EligibleQuest;
+}
+
+const { datum } = Astro.props;
+
+let activeHover = datum.eligible
+  ? "bg-green-400/20 hover:bg-green-400/40"
+  : "bg-gray-400/20 hover:bg-gray-400/40";
+---
+
+<section class=`rounded p-4 transition-colors duration-300 ${activeHover}`>
+  <img class="mx-auto mb-2 h-32 w-32" src={datum.imageUrl} alt={datum.title} />
+  <p class="text-center text-sm text-slate-700">{datum.title}</p>
+  <p class="text-center text-xs text-slate-700">
+    {
+      new Intl.DateTimeFormat("id-Id", {
+        dateStyle: "medium",
+        timeZone: "Asia/Jakarta",
+      }).format(datum.date)
+    }
+  </p>
+</section>
