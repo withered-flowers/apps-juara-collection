@@ -56,6 +56,14 @@ await postHandler(Astro.request);
               <ProfileCard datum={datum} />
             ))}
           </section>
+          {dataResponse.data.quests.length === 0 && (
+            <section>
+              <p class="animate-pulse text-center text-slate-700">
+                No eligible quests found for this profile
+              </p>
+            </section>
+          )}
+
           <section class="my-4">
             <a
               class=" rounded bg-sky-400 px-4 py-2 transition-colors duration-300 hover:bg-sky-800 hover:text-white/90"

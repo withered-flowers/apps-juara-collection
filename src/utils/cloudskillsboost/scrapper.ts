@@ -14,62 +14,66 @@ import {
 import type { Profile, EligibleProfile } from "./defs";
 
 export const analyzeHtml = (htmlString: string): Profile => {
-  const dom = parseFromString(htmlString);
+  try {
+    const dom = parseFromString(htmlString);
 
-  const profileName = dom
-    .getElementsByClassName(CSB_PROFILE_NAME)[0]
-    .textContent.trim();
+    const profileName = dom
+      .getElementsByClassName(CSB_PROFILE_NAME)[0]
+      .textContent.trim();
 
-  // Fetch all the "profile-badge" , will return Node[]
-  const badges = dom.getElementsByClassName(CSB_PROFILE_BADGES);
+    // Fetch all the "profile-badge" , will return Node[]
+    const badges = dom.getElementsByClassName(CSB_PROFILE_BADGES);
 
-  // ("ql-title-medium l-mts"), will return String[]
-  const questNames = badges.map((badge) =>
-    badge.getElementsByClassName(CSB_QUEST_NAME)[0].textContent.trim(),
-  );
+    // ("ql-title-medium l-mts"), will return String[]
+    const questNames = badges.map((badge) =>
+      badge.getElementsByClassName(CSB_QUEST_NAME)[0].textContent.trim(),
+    );
 
-  // ("badge-image") > img, will return String[]
-  const questImages = badges.map((badge) => {
-    const anchorImage = badge.getElementsByClassName(CSB_QUEST_BADGE)[0];
-    const image = anchorImage.getElementsByTagName("img")[0];
-    const imageUrl = image.getAttribute("src");
+    // ("badge-image") > img, will return String[]
+    const questImages = badges.map((badge) => {
+      const anchorImage = badge.getElementsByClassName(CSB_QUEST_BADGE)[0];
+      const image = anchorImage.getElementsByTagName("img")[0];
+      const imageUrl = image.getAttribute("src");
 
-    return imageUrl;
-  });
+      return imageUrl;
+    });
 
-  // ("ql-body-medium l-mbs"), will return String[]
-  const questDatesOfCompletions = badges.map((badge) => {
-    const stringDate = badge
-      .getElementsByClassName(CSB_QUEST_DAY_OF_COMPLETION)[0]
-      .textContent.trim()
-      .replace("Earned ", "");
+    // ("ql-body-medium l-mbs"), will return String[]
+    const questDatesOfCompletions = badges.map((badge) => {
+      const stringDate = badge
+        .getElementsByClassName(CSB_QUEST_DAY_OF_COMPLETION)[0]
+        .textContent.trim()
+        .replace("Earned ", "");
 
-    const date = new Date(stringDate);
+      const date = new Date(stringDate);
 
-    return date;
-  });
+      return date;
+    });
 
-  // Check if the length of titles and dates are equal
-  if (
-    questNames.length !== questDatesOfCompletions.length ||
-    questNames.length !== questImages.length
-  ) {
-    throw new Error("Titles, dates, and images length are not equal");
+    // Check if the length of titles and dates are equal
+    if (
+      questNames.length !== questDatesOfCompletions.length ||
+      questNames.length !== questImages.length
+    ) {
+      throw new Error("Titles, dates, and images length are not equal");
+    }
+
+    // Combine the titles and dates into an Array of Object
+    // { title: string, date: Date }[]
+    const quests = questNames.map((title, index) => ({
+      title,
+      imageUrl: questImages[index],
+      date: questDatesOfCompletions[index],
+    }));
+
+    // Return the result to be processed
+    return {
+      name: profileName,
+      quests,
+    };
+  } catch (err) {
+    throw new Error("Invalid URL or Profile not public yet");
   }
-
-  // Combine the titles and dates into an Array of Object
-  // { title: string, date: Date }[]
-  const quests = questNames.map((title, index) => ({
-    title,
-    imageUrl: questImages[index],
-    date: questDatesOfCompletions[index],
-  }));
-
-  // Return the result to be processed
-  return {
-    name: profileName,
-    quests,
-  };
 };
 
 export const analyzeTier = (profile: Profile): EligibleProfile => {

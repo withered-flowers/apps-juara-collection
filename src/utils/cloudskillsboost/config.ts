@@ -49,7 +49,7 @@ export const DATE_RANGE = ["2020-05-20 EDT", "2020-05-22 EDT"];
 // Tier 1 = 6 Quests to Complete
 // Tier 2 = 10 Quests to Complete
 // Tier 3 = 14 Quests to Complete
-export const TIERS = [3, 6];
+export const TIERS = [7, 12];
 
 // ! DO NOT CHANGE ANYTHING BELOW THIS LINE !!!
 // DOM Object for holding the CloudSkillsBoost Profile Name

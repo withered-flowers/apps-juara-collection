@@ -34,7 +34,7 @@ export const postHandler = async (request: Request) => {
       const responseText = await response.text();
 
       if (!response.ok) {
-        throw new Error(`Either Invalid URL or Profile not public yet`);
+        throw new Error("Either Invalid URL or Profile not public yet");
       }
       // End of Fetcher
 
@@ -58,6 +58,8 @@ export const postHandler = async (request: Request) => {
         dataResponse.error = err.message;
 
         console.error(err.message);
+      } else {
+        console.error(err);
       }
     }
   }
