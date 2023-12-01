@@ -1,107 +1,14 @@
 ---
-import { z } from "astro/zod";
 import Layout from "../layouts/Layout.astro";
-import {
-  InputProfileURL,
-  type ProfileDataResponse,
-} from "@/utils/cloudskillsboost/defs";
-import { EVENT_NAME } from "@/utils/cloudskillsboost/config";
-import { analyzeHtml, analyzeTier } from "@/utils/cloudskillsboost/scrapper";
-import ProfileCard from "@/components/ProfileCard.astro";
-
-let dataResponse: ProfileDataResponse = {
-  error: undefined,
-  data: undefined,
-};
-
-if (Astro.request.method === "POST") {
-  try {
-    const data = await Astro.request.formData();
-    const profileUrl = data.get("profileUrl");
-
-    const parsedInput = InputProfileURL.safeParse(profileUrl);
-
-    if (!parsedInput.success) {
-      throw parsedInput.error;
-    }
-
-    // Fetcher
-    const response = await fetch(parsedInput.data);
-    const responseText = await response.text();
-    // End of Fetcher
-
-    // Parser
-    const resultHtml = analyzeHtml(responseText);
-    const resultTier = analyzeTier(resultHtml);
-
-    dataResponse = {
-      error: undefined,
-      data: resultTier,
-    };
-    // End of Parser
-  } catch (err) {
-    dataResponse.data = undefined;
-
-    if (err instanceof z.ZodError) {
-      dataResponse.error = err.issues[0].message;
-
-      console.error(err.issues);
-    } else if (err instanceof Error) {
-      dataResponse.error = err.message;
-
-      console.error(err.message);
-    }
-  }
-}
 ---
 
 <Layout title="Fetch Me">
   <section
     class="flex min-h-[100dvh] w-screen flex-col items-center justify-center gap-2 bg-gray-100 p-4"
   >
-    {
-      !dataResponse.data && (
-        <>
-          <p class="text-slate-700">{EVENT_NAME} - URL Validator</p>
-          <form class="mb-8 flex flex-row gap-2" method="POST">
-            <input
-              type="text"
-              class="min-w-[25vw] rounded bg-white px-4 py-2 text-slate-700 transition-all duration-300 hover:ring-2 hover:ring-blue-400"
-              placeholder="Your Profile URL"
-              name="profileUrl"
-              required
-            />
-            <button class="mx-auto max-w-[10rem] rounded bg-gray-300 px-4 py-2 transition-colors duration-300 hover:bg-gray-500 hover:text-slate-100">
-              Submit
-            </button>
-          </form>
-        </>
-      )
-    }
-
-    {
-      dataResponse.data && (
-        <>
-          <section class="flex flex-col items-center text-slate-700">
-            <p class="text-center">{dataResponse.data.name}</p>
-            <p class="text-center">Tier: {dataResponse.data.tier}</p>
-            <p class="text-center">
-              Eligible Quests: {dataResponse.data.totalEligibleQuests}
-            </p>
-            <a
-              class="text-sky-500 underline transition-colors duration-300 hover:text-sky-600"
-              href="/"
-            >
-              Back to Form
-            </a>
-          </section>
-          <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {dataResponse.data.quests.map((datum) => (
-              <ProfileCard datum={datum} />
-            ))}
-          </section>
-        </>
-      )
-    }
+    <a
+      class="text-sky-500 underline transition-colors duration-300 hover:text-sky-600"
+      href="/csb">Validator CSB</a
+    >
   </section>
 </Layout>

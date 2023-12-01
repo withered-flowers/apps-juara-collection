@@ -13,7 +13,11 @@ let activeHover = datum.eligible
 ---
 
 <section class=`rounded p-4 transition-colors duration-300 ${activeHover}`>
-  <img class="mx-auto mb-2 h-32 w-32" src={datum.imageUrl} alt={datum.title} />
+  <img
+    class="mx-auto mb-2 h-32 w-[8.75rem] rounded"
+    src={datum.imageUrl}
+    alt={datum.title}
+  />
   <p class="text-center text-sm text-slate-700">{datum.title}</p>
   <p class="text-center text-xs text-slate-700">
     {
