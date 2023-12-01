@@ -29,6 +29,12 @@ export const postHandler = async (request: Request) => {
         throw parsedInput.error;
       }
 
+      const regex =
+        /https:\/\/www.cloudskillsboost.google\/public_profiles\/[a-zA-Z0-9]+/;
+      if (!regex.test(parsedInput.data)) {
+        throw new Error("Either Invalid URL or Profile not public yet");
+      }
+
       // Fetcher
       const response = await fetch(parsedInput.data);
       const responseText = await response.text();
