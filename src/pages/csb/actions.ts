@@ -4,6 +4,7 @@ import {
 } from "@/utils/cloudskillsboost/defs";
 import { analyzeHtml, analyzeTier } from "@/utils/cloudskillsboost/scrapper";
 import { z } from "astro/zod";
+import { ERR_INVALID_URL, URL_TO_MATCH } from "./constants";
 
 export let dataResponse: ProfileDataResponse = {
   error: undefined,
@@ -20,6 +21,8 @@ export const resetDataResponse = () => {
 export const postHandler = async (request: Request) => {
   if (request.method === "POST") {
     try {
+      const urlToMatch: RegExp = URL_TO_MATCH;
+
       const data = await request.formData();
       const profileUrl = data.get("profileUrl");
 
@@ -29,10 +32,8 @@ export const postHandler = async (request: Request) => {
         throw parsedInput.error;
       }
 
-      const regex =
-        /https:\/\/www.cloudskillsboost.google\/public_profiles\/[a-zA-Z0-9]+/;
-      if (!regex.test(parsedInput.data)) {
-        throw new Error("Either Invalid URL or Profile not public yet");
+      if (!urlToMatch.test(parsedInput.data)) {
+        throw new Error(ERR_INVALID_URL);
       }
 
       // Fetcher
@@ -40,7 +41,7 @@ export const postHandler = async (request: Request) => {
       const responseText = await response.text();
 
       if (!response.ok) {
-        throw new Error("Either Invalid URL or Profile not public yet");
+        throw new Error(ERR_INVALID_URL);
       }
       // End of Fetcher
 
