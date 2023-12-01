@@ -1,3 +1,4 @@
+// Event Name to be Shown on the Page
 export const EVENT_NAME = "Juara Experimental";
 
 // List of quests to complete
@@ -50,6 +51,7 @@ export const DATE_RANGE = ["2020-05-20 EDT", "2020-05-22 EDT"];
 // Tier 3 = 14 Quests to Complete
 export const TIERS = [3, 6];
 
+// ! DO NOT CHANGE ANYTHING BELOW THIS LINE !!!
 // DOM Object for holding the CloudSkillsBoost Profile Name
 export const CSB_PROFILE_NAME = "ql-display-small";
 
