@@ -1,36 +1,10 @@
 ---
 import { EVENT_NAME } from "@/utils/google-developer/config";
 import Layout from "@/layouts/Layout.astro";
-import { InputProfileURL } from "@/utils/google-developer/defs";
-import { z } from "astro/zod";
+import { dataResponse, postHandler, resetDataResponse } from "./actions";
 
-if (Astro.request.method === "POST") {
-  try {
-    const data = await Astro.request.formData();
-    const profileUrl = data.get("profileUrl");
-
-    const parsedInput = InputProfileURL.safeParse(profileUrl);
-
-    if (!parsedInput.success) {
-      throw parsedInput.error;
-    }
-
-    console.log(parsedInput.data);
-
-    const response = await fetch(parsedInput.data);
-    const responseText = await response.text();
-
-    console.log(responseText.trim());
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      console.error(err.issues);
-    } else if (err instanceof Error) {
-      console.error(err.message);
-    } else {
-      console.error(err);
-    }
-  }
-}
+resetDataResponse();
+await postHandler(Astro.request);
 ---
 
 <Layout title="Fetch Me">
@@ -54,5 +28,13 @@ if (Astro.request.method === "POST") {
         </button>
       </form>
     </>
+
+    {
+      dataResponse.error && (
+        <p class="animate-pulse rounded bg-red-700 px-4 py-2 text-white/90">
+          {dataResponse.error}
+        </p>
+      )
+    }
   </section>
 </Layout>

@@ -1,10 +1,10 @@
+import { z } from "astro/zod";
+import { ERR_INVALID_URL, URL_TO_MATCH } from "./constants";
 import {
   InputProfileURL,
   type ProfileDataResponse,
 } from "@/utils/cloudskillsboost/defs";
 import { analyzeHtml, analyzeTier } from "@/utils/cloudskillsboost/scrapper";
-import { z } from "astro/zod";
-import { ERR_INVALID_URL, URL_TO_MATCH } from "./constants";
 
 export let dataResponse: ProfileDataResponse = {
   error: undefined,

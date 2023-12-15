@@ -26,3 +26,10 @@ export const DATE_RANGE = ["2020-05-20 EDT", "2020-05-22 EDT"];
 // Tier 2 = 10 Quests to Complete
 // Tier 3 = 14 Quests to Complete
 export const TIERS = [3, 6];
+
+// ! DO NOT CHANGE ANYTHING BELOW THIS LINE !!!
+// DOM Object for holding the Google Developers Profile Avatar
+export const GDEV_PROFILE_AVATAR = "div.profile-avatar > span";
+
+// DOM Object for holding the Google Developers Profile Name
+export const GDEV_PROFILE_NAME = "div.profile-name > h2";
