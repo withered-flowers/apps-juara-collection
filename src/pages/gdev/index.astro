@@ -14,23 +14,25 @@ await postHandler(Astro.request);
   <section
     class="flex min-h-[100dvh] w-screen flex-col items-center justify-center gap-2 bg-gray-100 p-4"
   >
-    <>
-      <p class="text-slate-700">{EVENT_NAME} - URL Validator</p>
-      <form class="mb-8 flex flex-row gap-2" method="POST">
-        <input
-          type="text"
-          class="min-w-[25vw] rounded bg-white px-4 py-2 text-slate-700 transition-all duration-300 hover:ring-2 hover:ring-blue-400"
-          placeholder="Your Profile URL"
-          name="profileUrl"
-          required
-        />
-        <button
-          class="mx-auto max-w-[10rem] rounded bg-gray-300 px-4 py-2 transition-colors duration-300 hover:bg-gray-500 hover:text-slate-100"
-        >
-          Submit
-        </button>
-      </form>
-    </>
+    {
+      !dataResponse.data && (
+        <>
+          <p class="text-slate-700">{EVENT_NAME} - URL Validator</p>
+          <form class="mb-8 flex flex-row gap-2" method="POST">
+            <input
+              type="text"
+              class="min-w-[25vw] rounded bg-white px-4 py-2 text-slate-700 transition-all duration-300 hover:ring-2 hover:ring-blue-400"
+              placeholder="Your Profile URL"
+              name="profileUrl"
+              required
+            />
+            <button class="mx-auto max-w-[10rem] rounded bg-gray-300 px-4 py-2 transition-colors duration-300 hover:bg-gray-500 hover:text-slate-100">
+              Submit
+            </button>
+          </form>
+        </>
+      )
+    }
 
     {
       dataResponse.error && (

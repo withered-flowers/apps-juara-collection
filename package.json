@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.3.2",
+    "@astrojs/netlify": "^3.1.1",
     "@astrojs/tailwind": "^5.0.3",
-    "@astrojs/vercel": "^6.1.0",
     "@sparticuz/chromium-min": "^119.0.0",
     "astro": "^4.0.5",
     "dom-parser": "^1.1.5",

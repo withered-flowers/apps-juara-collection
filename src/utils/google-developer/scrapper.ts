@@ -20,6 +20,7 @@ export const analyzeHtml = async (htmlString: string): Promise<Profile> => {
   });
 
   // const browser = await playwright.launch({
+  //   args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
   //   headless: true,
   // });
 
