@@ -37,21 +37,14 @@ export const postHandler = async (request: Request) => {
         throw new Error(ERR_INVALID_URL);
       }
 
-      // !! FETCHER START HERE
+      // Fetcher & Parser
       const resultHtml = await analyzeHtml(parsedInput.data);
       const resultTier = analyzeTier(resultHtml);
-      // !! END OF FETCHER
-
-      // !! Start of Checker
-
-      // !! End of Checker
 
       dataResponse = {
         error: undefined,
         data: resultTier,
       };
-
-      console.log(JSON.stringify(dataResponse, null, 2));
     } catch (err) {
       dataResponse.data = undefined;
 
