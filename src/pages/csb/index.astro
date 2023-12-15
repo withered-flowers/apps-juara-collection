@@ -1,9 +1,9 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import ProfileCard from "@/components/ProfileCard.astro";
-import { EVENT_NAME } from "@/utils/cloudskillsboost/config";
 
 import { dataResponse, resetDataResponse, postHandler } from "./actions";
+import { EVENT_NAME } from "@/utils/cloudskillsboost/config";
 
 resetDataResponse();
 await postHandler(Astro.request);

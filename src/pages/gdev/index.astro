@@ -1,7 +1,8 @@
 ---
-import { EVENT_NAME } from "@/utils/google-developer/config";
 import Layout from "@/layouts/Layout.astro";
+
 import { dataResponse, postHandler, resetDataResponse } from "./actions";
+import { EVENT_NAME } from "@/utils/google-developer/config";
 
 resetDataResponse();
 await postHandler(Astro.request);
@@ -34,6 +35,20 @@ await postHandler(Astro.request);
         <p class="animate-pulse rounded bg-red-700 px-4 py-2 text-white/90">
           {dataResponse.error}
         </p>
+      )
+    }
+
+    {
+      dataResponse.data && (
+        <>
+          <p>{dataResponse.data.name}</p>
+          <img
+            src={dataResponse.data.avatar}
+            class="h-32 w-32 rounded-full"
+            alt="Profile Picture"
+          />
+          <pre>{JSON.stringify(dataResponse.data, null, 2)}</pre>
+        </>
       )
     }
   </section>

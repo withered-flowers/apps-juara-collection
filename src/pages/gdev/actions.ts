@@ -1,17 +1,11 @@
-import { z } from "astro/zod";
-import { ERR_INVALID_URL, ARR_URL_TO_MATCH } from "./constants";
 import {
   InputProfileURL,
   type ProfileDataResponse,
 } from "@/utils/google-developer/defs";
-import { chromium as playwright, devices } from "playwright-core";
-import chromium from "@sparticuz/chromium-min";
-import {
-  GDEV_PROFILE_AVATAR,
-  GDEV_PROFILE_NAME,
-} from "@/utils/google-developer/config";
-
-import { Dom, parseFromString } from "dom-parser";
+import { analyzeHtml, analyzeTier } from "@/utils/google-developer/scrapper";
+import { z } from "astro/zod";
+import { ARR_URL_TO_MATCH, ERR_INVALID_URL } from "./constants";
+// import chromium from "@sparticuz/chromium-min";
 
 export let dataResponse: ProfileDataResponse = {
   error: undefined,
@@ -43,72 +37,21 @@ export const postHandler = async (request: Request) => {
         throw new Error(ERR_INVALID_URL);
       }
 
-      // console.log(parsedInput.data);
+      // !! FETCHER START HERE
+      const resultHtml = await analyzeHtml(parsedInput.data);
+      const resultTier = analyzeTier(resultHtml);
+      // !! END OF FETCHER
 
-      // const browser = await playwright.launch({
-      //   args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
-      //   headless: true,
-      //   // executablePath: await chromium.executablePath(
-      //   //   "https://github.com/Sparticuz/chromium/releases/download/v119.0.0/chromium-v119.0.0-pack.tar",
-      //   // ),
-      // });
+      // !! Start of Checker
 
-      const browser = await playwright.launch({
-        headless: true,
-      });
-
-      const page = await browser.newPage();
-
-      await page.goto(parsedInput.data, {
-        timeout: 10000,
-      });
-
-      const [elementProfileAvatar, elementProfileName, elementProfileBadges] =
-        await Promise.all([
-          page.waitForSelector(GDEV_PROFILE_AVATAR),
-          page.waitForSelector(GDEV_PROFILE_NAME),
-          page.waitForSelector("#all-profile-badges-container"),
-        ]);
-
-      const dataProfileAvatar = (
-        (await elementProfileAvatar.getAttribute("style")) ?? ""
-      ).replace(/background-image:url\(|\)/g, "");
-
-      const dataProfileName = await elementProfileName.textContent();
-
-      // TODO: Need to change this async-ness
-      const dataProfileBadges = await elementProfileBadges.$$(".badge");
-      let arrProfileBadges: { title: string; date: string }[] = [];
-
-      for (let i = 0; i < dataProfileBadges.length; i++) {
-        const dataProfileBadge = dataProfileBadges[i];
-        const dataProfileBadgeTitle = await (
-          await dataProfileBadge.$(".badge-title")
-        )?.textContent();
-        const dataProfileBadgeDate = await (
-          await dataProfileBadge.$(".badge-date")
-        )?.textContent();
-
-        if (dataProfileBadgeTitle && dataProfileBadgeDate) {
-          arrProfileBadges.push({
-            title: dataProfileBadgeTitle,
-            date: dataProfileBadgeDate,
-          });
-        }
-      }
+      // !! End of Checker
 
       dataResponse = {
         error: undefined,
-        data: {
-          avatar: dataProfileAvatar,
-          name: dataProfileName,
-          badges: arrProfileBadges,
-        },
+        data: resultTier,
       };
 
       console.log(JSON.stringify(dataResponse, null, 2));
-
-      await browser.close();
     } catch (err) {
       dataResponse.data = undefined;
 
